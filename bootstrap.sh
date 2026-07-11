@@ -29,7 +29,7 @@ main() {
   "${ROOT_DIR}/scripts/install-tools.sh"
 
   log "Checking GitHub authentication"
-  "${ROOT_DIR}/scripts/authenticate-github.sh" --offer
+  "${ROOT_DIR}/scripts/authenticate-github.sh"
 
   log "Running verification"
   "${ROOT_DIR}/verify.sh"
