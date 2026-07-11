@@ -3,6 +3,7 @@
 Repeatable bootstrap for Ubuntu WSL2 development instances.
 
 The bootstrap installs Git, GitHub CLI (`gh`), mise, Eclipse Temurin Java 11/17/21/25, Node.js 24, pnpm 10, Codex CLI, Maven, and a small set of common command-line development tools. Java 25, Node.js 24, pnpm 10, Maven, and Codex CLI are configured as global tools. The other Java versions remain installed and easy to select.
+The base image setup also installs `wslu` so `gh auth login --web` can open a Windows browser from WSL when needed.
 
 ## Model
 
@@ -206,6 +207,10 @@ No GitHub token is stored in this repository. Inspect or remove auth with:
 gh auth status
 gh auth logout --hostname github.com
 ```
+
+If you want browser-based login to open a Windows browser from WSL, install `wslu` in the base image. That provides `wslview`, which `gh` can use when it cannot open a Linux desktop browser.
+
+`gh auth login --web` uses GitHub's OAuth flow and requests the standard account-level scopes needed by Git operations. It does not let you limit access to an arbitrary list of repositories at login time. If you need repo-selected write access, create a fine-grained personal access token with selected repositories in GitHub settings, then feed that token to `gh` with `--with-token` or `GH_TOKEN` in the environment for automation.
 
 ## Verify
 

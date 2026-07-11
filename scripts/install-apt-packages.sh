@@ -32,6 +32,8 @@ packages=(
   unzip
   xz-utils
   zip
+  wslu
+  xdg-utils
 )
 
 sudo apt-get update
