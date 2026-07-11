@@ -45,6 +45,16 @@ for tool in "${tools_to_install[@]}"; do
   "$MISE" install "$tool"
 done
 
+"$MISE" upgrade \
+  java@temurin-11 \
+  java@temurin-17 \
+  java@temurin-21 \
+  java@temurin-25 \
+  node@24 \
+  pnpm@10 \
+  maven@latest \
+  npm:@openai/codex
+
 "$MISE" use --global java@temurin-25
 "$MISE" use --global node@24
 "$MISE" use --global pnpm@10

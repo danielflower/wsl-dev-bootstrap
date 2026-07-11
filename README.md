@@ -71,12 +71,7 @@ git pull --ff-only
 ./bootstrap.sh
 ```
 
-For later updates in the same instance:
-
-```bash
-git pull --ff-only
-./bootstrap.sh
-```
+Rerun `./bootstrap.sh` any time you want to update apt packages and mise-managed tools in that instance.
 
 ## GitHub Auth
 
@@ -144,41 +139,11 @@ Global default:
 mise use --global java@temurin-25
 ```
 
-## Updating
-
-APT:
-
-```bash
-sudo apt-get update
-sudo apt-get upgrade
-```
-
-Mise:
-
-```bash
-sudo apt-get update
-sudo apt-get install --only-upgrade mise
-mise upgrade java@temurin-11 java@temurin-17 java@temurin-21 java@temurin-25
-mise upgrade node@24
-mise upgrade pnpm@10
-mise upgrade maven@latest
-mise upgrade npm:@openai/codex
-```
-
 Playwright, when needed in a project:
 
 ```bash
 npx playwright install --with-deps
 ```
-
-Rerun the bootstrap safely:
-
-```bash
-./bootstrap.sh
-```
-
-The bootstrap does not move Java or Node.js to a different major version automatically.
-
 ## Remove
 
 Stop one instance:

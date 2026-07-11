@@ -37,4 +37,5 @@ packages=(
 )
 
 sudo apt-get update
+sudo DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends "${packages[@]}"
