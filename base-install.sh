@@ -31,6 +31,9 @@ main() {
   log "Installing global development tools"
   "${ROOT_DIR}/scripts/install-tools.sh"
 
+  log "Configuring Codex defaults"
+  "${ROOT_DIR}/scripts/configure-codex.sh"
+
   log "Running verification"
   "${ROOT_DIR}/verify.sh"
 

@@ -32,6 +32,7 @@ cd wsl-dev-bootstrap
 ```
 
 `./base-install.sh` writes `/etc/wsl.conf` for systemd, Windows mount isolation, and interop isolation.
+It also installs `bubblewrap` and writes `~/.codex/config.toml` with full-access defaults for Codex CLI.
 
 When you are satisfied with the base image, exit Ubuntu and export it:
 
@@ -170,6 +171,7 @@ wsl --unregister myproject
 
 - Apt packages: `scripts/install-apt-packages.sh`
 - WSL config: `scripts/configure-wsl.sh`
+- Codex defaults: `scripts/configure-codex.sh`
 - Git defaults: `config/gitconfig` and `config/gitignore_global`
 - Global tools: `scripts/install-tools.sh`
 - Shell activation: `scripts/configure-shell.sh`

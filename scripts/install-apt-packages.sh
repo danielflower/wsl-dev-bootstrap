@@ -13,6 +13,7 @@ packages=(
   apt-transport-https
   bash-completion
   build-essential
+  bubblewrap
   ca-certificates
   curl
   file
