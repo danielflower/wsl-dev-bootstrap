@@ -34,7 +34,17 @@ main() {
   log "Running verification"
   "${ROOT_DIR}/verify.sh"
 
-  log "Base image setup complete. Export this distro when you are satisfied with it."
+  cat <<'TEXT'
+[wsl-dev-bootstrap] Base image setup complete.
+[wsl-dev-bootstrap] Next:
+[wsl-dev-bootstrap]   1. Exit Ubuntu.
+[wsl-dev-bootstrap]   2. In PowerShell:
+[wsl-dev-bootstrap]      wsl --export Ubuntu-24.04 "F:\WSL\ubuntu-24.04-base.tar"
+[wsl-dev-bootstrap]      New-Item -ItemType Directory -Force F:\WSL\myproject
+[wsl-dev-bootstrap]      wsl --import myproject F:\WSL\myproject "F:\WSL\ubuntu-24.04-base.tar" --version 2
+[wsl-dev-bootstrap]   3. Start the project instance:
+[wsl-dev-bootstrap]      wsl --distribution myproject
+TEXT
 }
 
 main "$@"
