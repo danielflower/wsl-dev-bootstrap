@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+use_java() {
+  local version=${1:-}
+  local tool
+
+  case "$version" in
+    11 | 17 | 21 | 25) ;;
+    *)
+      printf 'Usage: use-java 11|17|21|25\n' >&2
+      return 2
+      ;;
+  esac
+
+  if ! tool=$(command -v mise 2>/dev/null); then
+    printf 'mise is not available on PATH. Restart your shell or run: source ~/.bashrc\n' >&2
+    return 1
+  fi
+
+  if [[ "${BASH_SOURCE[0]}" != "$0" ]]; then
+    eval "$("$tool" env -s bash "java@temurin-${version}")"
+    hash -r 2>/dev/null || true
+    printf 'Current shell now uses Java %s through mise.\n' "$version"
+  else
+    printf 'To switch Java for your current shell, run:\n'
+    printf '  mise shell java@temurin-%s\n' "$version"
+    printf '\nOr source this helper:\n'
+    printf '  source %s %s\n' "${BASH_SOURCE[0]}" "$version"
+  fi
+}
+
+use_java "$@"

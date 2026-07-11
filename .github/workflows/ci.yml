@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  shell:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install ShellCheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+
+      - name: Check Bash syntax
+        run: |
+          while IFS= read -r script; do
+            bash -n "$script"
+          done < <(find . -path ./.git -prune -o -type f \( -name '*.sh' -o -path './scripts/*' -o -name 'bootstrap.sh' -o -name 'verify.sh' \) -print)
+
+      - name: Run ShellCheck
+        run: |
+          shellcheck bootstrap.sh verify.sh scripts/*.sh scripts/use-java tests/smoke-test.sh
+
+      - name: Check executable scripts
+        run: |
+          while IFS= read -r script; do
+            test -x "$script" || {
+              echo "Not executable: $script" >&2
+              exit 1
+            }
+          done < <(find . -path ./.git -prune -o -type f \( -name '*.sh' -o -path './scripts/*' -o -name 'bootstrap.sh' -o -name 'verify.sh' \) -print)
+
+      - name: Run smoke test
+        run: ./tests/smoke-test.sh
+
+      - name: Scan for obvious secrets
+        run: |
+          if grep -RInE '(ghp_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,}|-----BEGIN (RSA|OPENSSH|EC|DSA)? ?PRIVATE KEY-----|AKIA[0-9A-Z]{16})' . --exclude-dir=.git; then
+            echo "Potential secret pattern found." >&2
+            exit 1
+          fi

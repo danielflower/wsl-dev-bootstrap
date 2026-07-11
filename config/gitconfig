@@ -1,0 +1,14 @@
+[init]
+    defaultBranch = main
+
+[fetch]
+    prune = true
+
+[pull]
+    ff = only
+
+[push]
+    autoSetupRemote = true
+
+[core]
+    excludesFile = ~/.config/wsl-dev-bootstrap/gitignore_global
