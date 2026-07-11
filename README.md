@@ -2,7 +2,7 @@
 
 Repeatable bootstrap for Ubuntu WSL2 development instances.
 
-The bootstrap installs Git, GitHub CLI (`gh`), mise, Eclipse Temurin Java 11/17/21/25, Node.js 24, pnpm 10, Codex CLI, Maven, and common command-line development tools. Java 25, Node.js 24, pnpm 10, Maven, and Codex CLI are configured as global tools.
+The bootstrap installs Git, GitHub CLI (`gh`), mise, Eclipse Temurin Java 11/17/21/25, Node.js 24, pnpm 10, Codex CLI, Maven, and common command-line development tools. Java 25, Node.js 24, pnpm 10, and Maven are configured as global mise tools. Codex CLI is installed through npm.
 
 ## Prerequisites
 

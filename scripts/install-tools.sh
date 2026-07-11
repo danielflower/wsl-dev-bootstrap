@@ -20,7 +20,6 @@ tools_to_install=(
   node@24
   pnpm@10
   maven@latest
-  npm:@openai/codex
 )
 
 ensure_remote_version() {
@@ -52,15 +51,15 @@ done
   java@temurin-25 \
   node@24 \
   pnpm@10 \
-  maven@latest \
-  npm:@openai/codex
+  maven@latest
 
 "$MISE" use --global java@temurin-25
 "$MISE" use --global node@24
 "$MISE" use --global pnpm@10
 "$MISE" use --global maven@latest
-"$MISE" use --global npm:@openai/codex
+
+npm install --global @openai/codex@latest
 
 "$MISE" reshim || true
 
-log "Java 25, Node.js 24, pnpm 10, Maven, and Codex CLI are configured as global mise defaults"
+log "Java 25, Node.js 24, pnpm 10, Maven, and Codex CLI are configured"
