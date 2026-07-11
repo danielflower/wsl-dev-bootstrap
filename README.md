@@ -79,7 +79,7 @@ Authenticate this WSL instance independently:
 ./scripts/authenticate-github.sh
 ```
 
-The script prints the fine-grained PAT creation URL and then prompts for the token.
+The script prints a prefilled fine-grained PAT creation URL, then prompts for the token.
 
 Inspect or remove auth:
 
@@ -88,9 +88,10 @@ gh auth status
 gh auth logout --hostname github.com
 ```
 
-Create the token at `https://github.com/settings/personal-access-tokens/new`, pick only the repositories you want this WSL instance to access, and grant the minimum repository permissions needed for Git operations and `gh`:
+The URL pre-fills the token name, description, expiry, and permission flags. Pick only the repositories you want this WSL instance to access, and keep the permissions small:
 
-- `Contents`: read and write
+- `Contents`: write
+- `Metadata`: read
 - `Pull requests`: write if you plan to create PRs from this instance
 
 ## Verify
