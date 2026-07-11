@@ -131,7 +131,7 @@ The bootstrap is safe to rerun. It does not replace `.bashrc`; it updates one ma
 
 ## Optional Isolation From Windows
 
-For project instances where you want fewer paths back to Windows, disable Windows drive automount in the base image before export, or in each project instance:
+For project instances where you want fewer paths back to Windows, set this in the base image before export so every imported copy inherits it:
 
 ```bash
 sudo tee /etc/wsl.conf >/dev/null <<'EOF'
@@ -139,6 +139,7 @@ sudo tee /etc/wsl.conf >/dev/null <<'EOF'
 enabled = false
 
 [interop]
+enabled = false
 appendWindowsPath = false
 EOF
 ```
@@ -150,17 +151,7 @@ wsl --terminate myproject
 wsl --distribution myproject
 ```
 
-After restart, `/mnt/c` should not be mounted automatically, and Windows paths should not be appended to `PATH`.
-
-For stricter isolation, also disable Windows process interop:
-
-```ini
-[interop]
-enabled = false
-appendWindowsPath = false
-```
-
-That prevents Linux processes from launching Windows executables. It also breaks workflows that rely on launching Windows tools from inside Linux, such as `code .`.
+After restart, `/mnt/c` should not be mounted automatically, Windows paths should not be appended to `PATH`, and Linux processes should not be able to launch Windows executables through WSL interop.
 
 With automount disabled, prefer launching editors from Windows into WSL:
 
@@ -173,6 +164,8 @@ JetBrains IDEs can also connect to WSL through Remote Development from the Windo
 Headed Linux GUI tools can still work through WSLg on supported Windows versions. For example, Playwright can launch Linux browsers installed in WSL and show their windows on the Windows desktop. That is different from launching Windows Chrome or Edge from Linux, which requires Windows interop.
 
 This is useful isolation hygiene for project-specific instances, but it is not a hard security sandbox. Treat code running inside WSL as code running under your Windows user account, especially if you later mount Windows paths manually.
+
+A bad agent running as root inside the distro can edit `/etc/wsl.conf` and re-enable automount or interop for that distro. That does not give it extra Windows rights beyond your Windows user account, but it does remove the WSL-side isolation you configured.
 
 ## Authenticate With GitHub
 
