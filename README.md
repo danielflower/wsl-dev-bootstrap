@@ -63,6 +63,57 @@ wsl --distribution Ubuntu-24.04
 
 Store-installed distributions generally have fixed registered names. If you want several instances with custom names, use export/import or a downloaded root filesystem.
 
+## Create A Per-Project Ubuntu Instance
+
+WSL Store distributions have fixed registered names, so `wsl --install --distribution Ubuntu-24.04` cannot directly create a custom name such as `myproject`. For per-project instances, create or reuse a clean base Ubuntu distribution, export it, and import it under the project name.
+
+First create and launch a clean base distribution:
+
+```powershell
+wsl --install --distribution Ubuntu-24.04
+wsl --distribution Ubuntu-24.04
+```
+
+Inside Ubuntu, create your normal Linux user when prompted. Then configure imported copies to start as that user instead of root:
+
+```bash
+printf "[user]\ndefault=%s\n" "$USER" | sudo tee /etc/wsl.conf
+```
+
+Exit Ubuntu:
+
+```bash
+exit
+```
+
+Back in PowerShell, stop and export the base distribution:
+
+```powershell
+wsl --terminate Ubuntu-24.04
+
+wsl --export Ubuntu-24.04 `
+    "$env:USERPROFILE\Downloads\ubuntu-24.04-base.tar"
+```
+
+Import a project-specific instance named `myproject`:
+
+```powershell
+New-Item -ItemType Directory -Force C:\WSL\myproject
+
+wsl --import myproject `
+    C:\WSL\myproject `
+    "$env:USERPROFILE\Downloads\ubuntu-24.04-base.tar" `
+    --version 2
+```
+
+Launch it:
+
+```powershell
+wsl --distribution myproject
+```
+
+The name `myproject` is what appears in `wsl --list --verbose`, and it is the name to use with `wsl --distribution`, `wsl --terminate`, and `wsl --unregister`.
+
 ## Clone An Existing WSL Instance
 
 Stop the source distribution before export:
