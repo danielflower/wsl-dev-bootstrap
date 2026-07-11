@@ -52,6 +52,26 @@ Launch it and complete Ubuntu's first-run user setup:
 wsl --distribution Ubuntu-24.04
 ```
 
+If you want the base image to disable Windows mounts and interop before export, set `/etc/wsl.conf` now while you are in the base distro:
+
+```bash
+{
+  printf '%s\n' \
+    '[boot]' \
+    'systemd=true' \
+    '' \
+    '[user]' \
+    "default=$USER" \
+    '' \
+    '[automount]' \
+    'enabled = false' \
+    '' \
+    '[interop]' \
+    'enabled = false' \
+    'appendWindowsPath = false'
+} | sudo tee /etc/wsl.conf >/dev/null
+```
+
 Exit Ubuntu:
 
 ```bash
@@ -129,29 +149,18 @@ The bootstrap is safe to rerun. It does not replace `.bashrc`; it updates one ma
 # <<< wsl-dev-bootstrap <<<
 ```
 
-## Optional Isolation From Windows
-
-For project instances where you want fewer paths back to Windows, set this in the base image before export so every imported copy inherits it:
+For later updates in the same project instance, stay in that checkout and run:
 
 ```bash
-{
-  printf '%s\n' \
-    '[boot]' \
-    'systemd=true' \
-    '' \
-    '[user]' \
-    "default=$USER" \
-    '' \
-    '[automount]' \
-    'enabled = false' \
-    '' \
-    '[interop]' \
-    'enabled = false' \
-    'appendWindowsPath = false'
-} | sudo tee /etc/wsl.conf >/dev/null
+git pull --ff-only
+./bootstrap.sh
 ```
 
-If you already have `[boot]` and `[user]` in `/etc/wsl.conf`, keep them and add the new sections instead of replacing the file. The example above uses `$USER` from the current shell for the default user line.
+If you want a one-command local launcher, create that in your own home directory in the project instance. Keep the repository checkout itself as the source of truth.
+
+## Optional Isolation From Windows
+
+Use the same `/etc/wsl.conf` settings shown above if you want imported project instances to inherit Windows mount and interop isolation from the base image.
 
 Then restart the project instance from PowerShell:
 
