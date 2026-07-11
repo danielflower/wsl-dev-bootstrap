@@ -91,8 +91,10 @@ gh auth logout --hostname github.com
 The URL pre-fills the token name, description, expiry, and permission flags. Pick only the repositories you want this WSL instance to access, and keep the permissions small:
 
 - `Contents`: write
-- `Metadata`: read
 - `Pull requests`: write if you plan to create PRs from this instance
+- `Issues`: read
+- `Actions`: read
+- `Statuses`: read
 
 ## Verify
 

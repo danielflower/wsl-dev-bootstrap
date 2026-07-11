@@ -32,7 +32,7 @@ project_label=${BOOTSTRAP_PROJECT_NAME:-${WSL_DISTRO_NAME:-wsl-dev-bootstrap}}
 token_name=${BOOTSTRAP_PAT_NAME:-wsl-${project_label}}
 token_description=${BOOTSTRAP_PAT_DESCRIPTION:-Access required by https://github.com/danielflower/wsl-dev-bootstrap}
 token_expires_in=${BOOTSTRAP_PAT_EXPIRES_IN:-180}
-token_url="https://github.com/settings/personal-access-tokens/new?name=$(uri_encode "$token_name")&description=$(uri_encode "$token_description")&expires_in=$(uri_encode "$token_expires_in")&contents=write&pull_requests=write"
+token_url="https://github.com/settings/personal-access-tokens/new?name=$(uri_encode "$token_name")&description=$(uri_encode "$token_description")&expires_in=$(uri_encode "$token_expires_in")&contents=write&pull_requests=write&issues=read&actions=read&statuses=read"
 
 if gh auth status --hostname github.com >/dev/null 2>&1; then
   log "GitHub CLI is already authenticated for github.com"
@@ -56,8 +56,10 @@ cat <<'TEXT'
 Choose only the repositories you want this instance to access, and keep the
 permissions as small as possible:
   - Contents: write
-  - Metadata: read
   - Pull requests: write if you plan to create PRs from this instance
+  - Issues: read
+  - Actions: read
+  - Statuses: read
 TEXT
 
 explain_storage
