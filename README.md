@@ -2,7 +2,7 @@
 
 Repeatable bootstrap for Ubuntu WSL2 development instances.
 
-The bootstrap installs Git, GitHub CLI (`gh`), mise, Eclipse Temurin Java 11/17/21/25, Node.js 24, Maven, and a small set of common command-line development tools. Java 25, Node.js 24, and Maven are configured as global mise defaults. The other Java versions remain installed and easy to select.
+The bootstrap installs Git, GitHub CLI (`gh`), mise, Eclipse Temurin Java 11/17/21/25, Node.js 24, pnpm 10, Codex CLI, Maven, and a small set of common command-line development tools. Java 25, Node.js 24, pnpm 10, Maven, and Codex CLI are configured as global tools. The other Java versions remain installed and easy to select.
 
 ## Model
 
@@ -40,7 +40,11 @@ wsl --list --running
 
 ## One-Time Base Image Setup
 
-Install Ubuntu 24.04:
+1. Install Ubuntu 24.04 and complete the first-run user setup.
+2. Inside that Ubuntu base distro, clone this repository and run `./base-install.sh`.
+3. Export the distro when you are satisfied with the base image.
+
+Install Ubuntu from PowerShell:
 
 ```powershell
 wsl --install --distribution Ubuntu-24.04
@@ -52,25 +56,16 @@ Launch it and complete Ubuntu's first-run user setup:
 wsl --distribution Ubuntu-24.04
 ```
 
-If you want the base image to disable Windows mounts and interop before export, set `/etc/wsl.conf` now while you are in the base distro:
-
 ```bash
-{
-  printf '%s\n' \
-    '[boot]' \
-    'systemd=true' \
-    '' \
-    '[user]' \
-    "default=$USER" \
-    '' \
-    '[automount]' \
-    'enabled = false' \
-    '' \
-    '[interop]' \
-    'enabled = false' \
-    'appendWindowsPath = false'
-} | sudo tee /etc/wsl.conf >/dev/null
+sudo apt-get update
+sudo apt-get install -y git
+
+git clone https://github.com/danielflower/wsl-dev-bootstrap.git
+cd wsl-dev-bootstrap
+./base-install.sh
 ```
+
+`./base-install.sh` also writes `/etc/wsl.conf` through `./scripts/configure-wsl.sh`, so the base image inherits your Windows-mount and interop settings before export.
 
 Exit Ubuntu:
 
@@ -131,14 +126,11 @@ wsl --distribution myproject
 
 ## Bootstrap A Project Instance
 
-Inside the project WSL instance:
+If you used `./base-install.sh` in the base image, the repository checkout is already present in the inherited filesystem. Inside the project WSL instance:
 
 ```bash
-sudo apt-get update
-sudo apt-get install -y git
-
-git clone https://github.com/danielflower/wsl-dev-bootstrap.git
 cd wsl-dev-bootstrap
+git pull --ff-only
 ./bootstrap.sh
 ```
 
@@ -158,9 +150,17 @@ git pull --ff-only
 
 If you want a one-command local launcher, create that in your own home directory in the project instance. Keep the repository checkout itself as the source of truth.
 
+Playwright is usually best installed in the project that uses it. When you need the browser binaries and Linux system dependencies, run:
+
+```bash
+npx playwright install --with-deps
+```
+
+That matches the official Playwright Linux guidance and avoids baking browser binaries into every base image.
+
 ## Optional Isolation From Windows
 
-Use the same `/etc/wsl.conf` settings shown above if you want imported project instances to inherit Windows mount and interop isolation from the base image.
+Use `/etc/wsl.conf` from `./scripts/configure-wsl.sh` if you want imported project instances to inherit Windows mount and interop isolation from the base image.
 
 Then restart the project instance from PowerShell:
 
@@ -218,8 +218,11 @@ Useful manual checks:
 ```bash
 java -version
 node --version
+pnpm --version
+npx --version
 npm --version
 mvn --version
+codex --version
 gh auth status
 mise ls
 ```
@@ -276,7 +279,9 @@ Update patched releases within the configured major versions:
 ```bash
 mise upgrade java@temurin-11 java@temurin-17 java@temurin-21 java@temurin-25
 mise upgrade node@24
+mise upgrade pnpm@10
 mise upgrade maven@latest
+mise upgrade npm:@openai/codex
 ```
 
 Rerun bootstrap:

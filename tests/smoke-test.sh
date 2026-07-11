@@ -4,8 +4,10 @@ set -Eeuo pipefail
 ROOT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 
 scripts=(
+  base-install.sh
   bootstrap.sh
   verify.sh
+  scripts/configure-wsl.sh
   scripts/install-apt-packages.sh
   scripts/install-github-cli.sh
   scripts/install-mise.sh

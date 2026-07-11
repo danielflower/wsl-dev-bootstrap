@@ -69,6 +69,18 @@ if [[ -n "$MISE" ]]; then
     fail "Node.js 24 is not active"
   fi
 
+  if pnpm --version 2>/dev/null | grep -qE '^10\.'; then
+    pass "pnpm 10 is active"
+  else
+    fail "pnpm 10 is not active"
+  fi
+
+  if codex --version >/dev/null 2>&1; then
+    pass "Codex CLI works"
+  else
+    fail "Codex CLI does not work"
+  fi
+
   if npm --version >/dev/null 2>&1; then
     pass "npm works"
   else

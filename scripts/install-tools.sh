@@ -18,7 +18,9 @@ tools_to_install=(
   java@temurin-21
   java@temurin-25
   node@24
+  pnpm@10
   maven@latest
+  npm:@openai/codex
 )
 
 ensure_remote_version() {
@@ -36,6 +38,7 @@ ensure_remote_version java '^temurin-17(\.|$)' 'Temurin Java 17 version'
 ensure_remote_version java '^temurin-21(\.|$)' 'Temurin Java 21 version'
 ensure_remote_version java '^temurin-25(\.|$)' 'Temurin Java 25 version'
 ensure_remote_version node '^24\.' 'Node.js 24 version'
+ensure_remote_version pnpm '^10\.' 'pnpm 10 version'
 
 for tool in "${tools_to_install[@]}"; do
   log "Ensuring ${tool} is available"
@@ -44,8 +47,10 @@ done
 
 "$MISE" use --global java@temurin-25
 "$MISE" use --global node@24
+"$MISE" use --global pnpm@10
 "$MISE" use --global maven@latest
+"$MISE" use --global npm:@openai/codex
 
 "$MISE" reshim || true
 
-log "Java 25, Node.js 24, and Maven are configured as global mise defaults"
+log "Java 25, Node.js 24, pnpm 10, Maven, and Codex CLI are configured as global mise defaults"

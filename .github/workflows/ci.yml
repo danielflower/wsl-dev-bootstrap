@@ -29,7 +29,7 @@ jobs:
 
       - name: Run ShellCheck
         run: |
-          shellcheck bootstrap.sh verify.sh scripts/*.sh scripts/use-java tests/smoke-test.sh
+          shellcheck base-install.sh bootstrap.sh verify.sh scripts/*.sh scripts/use-java tests/smoke-test.sh
 
       - name: Check executable scripts
         run: |

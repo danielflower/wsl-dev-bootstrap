@@ -1,4 +1,6 @@
 [tools]
 java = "temurin-25"
 node = "24"
+pnpm = "10"
 maven = "latest"
+"npm:@openai/codex" = "latest"
