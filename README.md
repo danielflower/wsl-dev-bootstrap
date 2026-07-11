@@ -134,15 +134,24 @@ The bootstrap is safe to rerun. It does not replace `.bashrc`; it updates one ma
 For project instances where you want fewer paths back to Windows, set this in the base image before export so every imported copy inherits it:
 
 ```bash
-sudo tee /etc/wsl.conf >/dev/null <<'EOF'
-[automount]
-enabled = false
-
-[interop]
-enabled = false
-appendWindowsPath = false
-EOF
+{
+  printf '%s\n' \
+    '[boot]' \
+    'systemd=true' \
+    '' \
+    '[user]' \
+    "default=$USER" \
+    '' \
+    '[automount]' \
+    'enabled = false' \
+    '' \
+    '[interop]' \
+    'enabled = false' \
+    'appendWindowsPath = false'
+} | sudo tee /etc/wsl.conf >/dev/null
 ```
+
+If you already have `[boot]` and `[user]` in `/etc/wsl.conf`, keep them and add the new sections instead of replacing the file. The example above uses `$USER` from the current shell for the default user line.
 
 Then restart the project instance from PowerShell:
 
