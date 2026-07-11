@@ -90,13 +90,15 @@ gh auth status
 gh auth logout --hostname github.com
 ```
 
-The URL pre-fills the token name, description, expiry, and permission flags. Pick only the repositories you want this WSL instance to access. The resource owner still has to be selected on the GitHub page.
+The URL pre-fills the token name, description, expiry, permission flags, and resource owner when `BOOTSTRAP_PAT_TARGET_NAME` is set. Pick only the repositories you want this WSL instance to access.
 
 - `Contents`: write
 - `Pull requests`: write
 - `Issues`: read
 - `Actions`: read
 - `Statuses`: read
+
+Set `BOOTSTRAP_PAT_TARGET_NAME` before running `./scripts/authenticate-github.sh` if you want the token aimed at a specific GitHub user or organization.
 
 ## Verify
 
