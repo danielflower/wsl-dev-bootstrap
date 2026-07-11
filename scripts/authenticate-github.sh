@@ -43,7 +43,6 @@ https://github.com/settings/personal-access-tokens/new
 Choose only the repositories you want this instance to access, and grant the
 minimum repository permissions needed for Git operations and GitHub CLI use:
   - Contents: read and write
-  - Metadata: read
   - Pull requests: write if you plan to create PRs from this instance
 TEXT
 
