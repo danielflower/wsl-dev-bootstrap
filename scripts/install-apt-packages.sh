@@ -32,7 +32,6 @@ packages=(
   unzip
   xz-utils
   zip
-  wslu
   xdg-utils
 )
 

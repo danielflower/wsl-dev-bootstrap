@@ -5,8 +5,6 @@ ROOT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 # shellcheck source=scripts/lib.sh
 . "${ROOT_DIR}/scripts/lib.sh"
 
-mode=${1:-standalone}
-
 if ! command -v gh >/dev/null 2>&1; then
   die "GitHub CLI is not installed. Run ./scripts/install-github-cli.sh first."
 fi
@@ -32,25 +30,34 @@ if gh auth status --hostname github.com >/dev/null 2>&1; then
   exit 0
 fi
 
-if [[ "$mode" == "--offer" ]]; then
-  if ! is_interactive; then
-    warn "GitHub CLI is not authenticated. Skipping login in noninteractive mode."
-    warn "Run ./scripts/authenticate-github.sh later to authenticate this WSL distribution."
-    exit 0
-  fi
-
-  read -r -p "Authenticate GitHub CLI for this WSL distribution now? [y/N] " answer
-  case "$answer" in
-    [Yy] | [Yy][Ee][Ss]) ;;
-    *)
-      warn "Skipping GitHub authentication. Run ./scripts/authenticate-github.sh later."
-      exit 0
-      ;;
-  esac
+if ! is_interactive; then
+  warn "GitHub CLI is not authenticated. Skipping login in noninteractive mode."
+  warn "Run ./scripts/authenticate-github.sh later to authenticate this WSL distribution."
+  exit 0
 fi
 
+cat <<'TEXT'
+Create a fine-grained personal access token for this WSL instance:
+https://github.com/settings/personal-access-tokens/new
+
+Choose only the repositories you want this instance to access, and grant the
+minimum repository permissions needed for Git operations and GitHub CLI use:
+  - Contents: read and write
+  - Metadata: read
+  - Pull requests: write if you plan to create PRs from this instance
+TEXT
+
 explain_storage
-gh auth login --hostname github.com --git-protocol https --web
+
+token=
+read -r -s -p "Paste the token you created: " token
+printf '\n'
+
+if [[ -z "$token" ]]; then
+  die "No token was provided."
+fi
+
+printf '%s' "$token" | gh auth login --hostname github.com --git-protocol https --with-token
 gh auth setup-git
 
 if gh auth status --hostname github.com >/dev/null 2>&1; then
