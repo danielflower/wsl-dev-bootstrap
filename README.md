@@ -129,6 +129,32 @@ The bootstrap is safe to rerun. It does not replace `.bashrc`; it updates one ma
 # <<< wsl-dev-bootstrap <<<
 ```
 
+## Optional Isolation From Windows
+
+For project instances where you want fewer paths back to Windows, disable Windows drive automount and Windows process interop inside that WSL distribution:
+
+```bash
+sudo tee /etc/wsl.conf >/dev/null <<'EOF'
+[automount]
+enabled = false
+
+[interop]
+enabled = false
+appendWindowsPath = false
+EOF
+```
+
+Then restart the project instance from PowerShell:
+
+```powershell
+wsl --terminate myproject
+wsl --distribution myproject
+```
+
+After restart, `/mnt/c` should not be mounted automatically, Windows paths should not be appended to `PATH`, and Linux processes should not be able to launch Windows executables through WSL interop.
+
+This is useful isolation hygiene for project-specific instances, but it is not a hard security sandbox. Treat code running inside WSL as code running under your Windows user account, especially if you later mount Windows paths manually.
+
 ## Authenticate With GitHub
 
 Authentication is per WSL instance. Authenticate each project instance independently:
