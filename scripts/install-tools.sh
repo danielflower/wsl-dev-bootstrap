@@ -58,7 +58,7 @@ done
 "$MISE" use --global pnpm@10
 "$MISE" use --global maven@latest
 
-npm install --global @openai/codex@latest
+"$MISE" exec node@24 -- npm install --global @openai/codex@latest
 
 "$MISE" reshim || true
 
