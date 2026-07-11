@@ -37,7 +37,9 @@ When you are satisfied with the base image, exit Ubuntu and export it:
 
 ```powershell
 wsl --terminate Ubuntu-24.04
-wsl --export Ubuntu-24.04 "$env:USERPROFILE\Downloads\ubuntu-24.04-base.tar"
+New-Item -ItemType Directory -Force F:\WSL
+
+wsl --export Ubuntu-24.04 "F:\WSL\ubuntu-24.04-base.tar"
 ```
 
 ## Project Instance
@@ -45,11 +47,11 @@ wsl --export Ubuntu-24.04 "$env:USERPROFILE\Downloads\ubuntu-24.04-base.tar"
 Import the base tarball under a project name:
 
 ```powershell
-New-Item -ItemType Directory -Force C:\WSL\myproject
+New-Item -ItemType Directory -Force F:\WSL\myproject
 
 wsl --import myproject `
-  C:\WSL\myproject `
-  "$env:USERPROFILE\Downloads\ubuntu-24.04-base.tar" `
+  F:\WSL\myproject `
+  "F:\WSL\ubuntu-24.04-base.tar" `
   --version 2
 ```
 
