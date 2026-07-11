@@ -56,7 +56,7 @@ cat <<'TEXT'
 Choose only the repositories you want this instance to access, and keep the
 permissions as small as possible:
   - Contents: write
-  - Pull requests: write if you plan to create PRs from this instance
+  - Pull requests: write
   - Issues: read
   - Actions: read
   - Statuses: read
