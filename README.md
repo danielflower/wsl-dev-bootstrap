@@ -24,6 +24,7 @@ At the Ubuntu shell prompt, clone and run the base installer:
 sudo apt-get update
 sudo apt-get install -y git
 
+cd ~
 git clone https://github.com/danielflower/wsl-dev-bootstrap.git
 cd wsl-dev-bootstrap
 ./base-install.sh
