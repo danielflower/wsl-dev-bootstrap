@@ -39,7 +39,7 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
     docker-compose-plugin
 
 sudo usermod -aG docker "$USER"
-echo "NOTE: You may need to log out and back in for Docker group membership to take effect."
+echo "NOTE: Docker group membership takes effect in the next login session."
 
 sudo systemctl enable docker
 sudo systemctl start docker

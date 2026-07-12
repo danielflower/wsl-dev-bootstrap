@@ -8,7 +8,7 @@ ROOT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 failures=0
 
 pass() { printf '[PASS] %s\n' "$*"; }
-warn_check() { printf '[WARN] %s\n' "$*" >&2; }
+info() { printf '[INFO] %s\n' "$*"; }
 fail() {
   printf '[FAIL] %s\n' "$*" >&2
   failures=$((failures + 1))
@@ -35,6 +35,8 @@ require_cmd docker
 
 if docker run --rm hello-world >/dev/null 2>&1; then
   pass "docker run hello-world succeeded"
+elif id -nG "$USER" | grep -qw docker && sg docker -c 'docker run --rm hello-world' >/dev/null 2>&1; then
+  pass "docker run hello-world succeeded through the configured docker group (new login activates it in the shell)"
 else
   fail "docker run hello-world failed"
 fi
@@ -111,7 +113,7 @@ if command -v gh >/dev/null 2>&1; then
   if gh auth status --hostname github.com >/dev/null 2>&1; then
     pass "GitHub CLI is authenticated for github.com"
   else
-    warn_check "GitHub CLI is intentionally unauthenticated or login has not been completed"
+    info "GitHub CLI is not authenticated (expected in the base image; authenticate each project instance separately)"
   fi
 fi
 
