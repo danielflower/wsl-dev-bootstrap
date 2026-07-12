@@ -48,11 +48,17 @@ main() {
 [wsl-dev-bootstrap] Next:
 [wsl-dev-bootstrap]   1. Exit Ubuntu.
 [wsl-dev-bootstrap]   2. In PowerShell:
-[wsl-dev-bootstrap]      wsl --export Ubuntu-24.04 "F:\WSL\ubuntu-24.04-base.tar"
-[wsl-dev-bootstrap]      New-Item -ItemType Directory -Force F:\WSL\myproject
-[wsl-dev-bootstrap]      wsl --import myproject F:\WSL\myproject "F:\WSL\ubuntu-24.04-base.tar" --version 2
-[wsl-dev-bootstrap]   3. Start the project instance:
-[wsl-dev-bootstrap]      wsl --distribution myproject
+[wsl-dev-bootstrap]      $Project = "myproject"
+[wsl-dev-bootstrap]      $ProjectDir = "F:\WSL\$Project"
+[wsl-dev-bootstrap]      $BaseImage = Join-Path (Split-Path -Parent $ProjectDir) "ubuntu-24.04-base.tar"
+[wsl-dev-bootstrap]      New-Item -ItemType Directory -Force $ProjectDir
+[wsl-dev-bootstrap]      wsl --terminate Ubuntu-24.04
+[wsl-dev-bootstrap]      wsl --export Ubuntu-24.04 $BaseImage
+[wsl-dev-bootstrap]      wsl --import $Project $ProjectDir $BaseImage --version 2
+[wsl-dev-bootstrap]   3. Update the project instance:
+[wsl-dev-bootstrap]      wsl --distribution $Project --exec bash -lc '~/update.sh'
+[wsl-dev-bootstrap]   4. Open the project instance:
+[wsl-dev-bootstrap]      wsl --distribution $Project
 TEXT
 }
 

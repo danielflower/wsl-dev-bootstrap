@@ -33,33 +33,28 @@ cd wsl-dev-bootstrap
 `./base-install.sh` writes `/etc/wsl.conf` for systemd, Windows mount isolation, and interop isolation.
 It also installs `bubblewrap` and writes `~/.codex/config.toml` with full-access defaults for Codex CLI.
 
-When you are satisfied with the base image, exit Ubuntu and export it:
-
-```powershell
-wsl --terminate Ubuntu-24.04
-New-Item -ItemType Directory -Force F:\WSL
-
-wsl --export Ubuntu-24.04 "F:\WSL\ubuntu-24.04-base.tar"
-```
-
-## Project Instance
-
-In PowerShell, set the project name once. Keep using the same PowerShell window
-for the remaining commands in this section:
+When you are satisfied with the base image, exit Ubuntu. In PowerShell, set the
+project name, create its directory, and export the base image. Keep using the
+same PowerShell window for the remaining commands:
 
 ```powershell
 $Project = "myproject"
 $ProjectDir = "F:\WSL\$Project"
-```
-
-Create its directory and import the base tarball:
-
-```powershell
+$BaseImage = Join-Path (Split-Path -Parent $ProjectDir) "ubuntu-24.04-base.tar"
 New-Item -ItemType Directory -Force $ProjectDir
 
+wsl --terminate Ubuntu-24.04
+wsl --export Ubuntu-24.04 $BaseImage
+```
+
+## Project Instance
+
+In the same PowerShell window, import the base tarball:
+
+```powershell
 wsl --import $Project `
   $ProjectDir `
-  "F:\WSL\ubuntu-24.04-base.tar" `
+  $BaseImage `
   --version 2
 ```
 
