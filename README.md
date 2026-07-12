@@ -34,14 +34,13 @@ cd wsl-dev-bootstrap
 It also installs `bubblewrap` and writes `~/.codex/config.toml` with full-access defaults for Codex CLI.
 
 When you are satisfied with the base image, exit Ubuntu. In PowerShell, set the
-project name, create its directory, and export the base image. Keep using the
-same PowerShell window for the remaining commands:
+WSL storage directory, create it, and export the base image. Keep using the same
+PowerShell window for the project-instance commands:
 
 ```powershell
-$Project = "myproject"
-$ProjectDir = "F:\WSL\$Project"
-$BaseImage = Join-Path (Split-Path -Parent $ProjectDir) "ubuntu-24.04-base.tar"
-New-Item -ItemType Directory -Force $ProjectDir
+$WSLDir = "F:\WSL"
+$BaseImage = Join-Path $WSLDir "ubuntu-24.04-base.tar"
+New-Item -ItemType Directory -Force $WSLDir
 
 wsl --terminate Ubuntu-24.04
 wsl --export Ubuntu-24.04 $BaseImage
@@ -49,9 +48,14 @@ wsl --export Ubuntu-24.04 $BaseImage
 
 ## Project Instance
 
-In the same PowerShell window, import the base tarball:
+In the same PowerShell window, set the project name, create its directory, and
+import the base tarball:
 
 ```powershell
+$Project = "myproject"
+$ProjectDir = Join-Path $WSLDir $Project
+New-Item -ItemType Directory -Force $ProjectDir
+
 wsl --import $Project `
   $ProjectDir `
   $BaseImage `
