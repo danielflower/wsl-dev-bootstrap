@@ -37,6 +37,9 @@ main() {
   log "Configuring Codex defaults"
   "${ROOT_DIR}/scripts/configure-codex.sh"
 
+  log "Configuring the instance update command"
+  "${ROOT_DIR}/scripts/configure-update-command.sh"
+
   log "Running verification"
   "${ROOT_DIR}/verify.sh"
 

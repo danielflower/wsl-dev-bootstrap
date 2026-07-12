@@ -6,6 +6,7 @@ ROOT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 scripts=(
   base-install.sh
   bootstrap.sh
+  update.sh
   verify.sh
   scripts/configure-wsl.sh
   scripts/install-apt-packages.sh
@@ -14,6 +15,7 @@ scripts=(
   scripts/install-mise.sh
   scripts/install-tools.sh
   scripts/configure-shell.sh
+  scripts/configure-update-command.sh
   scripts/configure-git.sh
   scripts/authenticate-github.sh
   scripts/use-java

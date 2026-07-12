@@ -20,7 +20,14 @@ Install Ubuntu 24.04:
 wsl --install --distribution Ubuntu-24.04
 ```
 
-Open the distro, then clone and run the base installer:
+Open the distro either by selecting **Ubuntu 24.04 LTS** from the Windows Start
+menu or by running this in PowerShell:
+
+```powershell
+wsl --distribution Ubuntu-24.04
+```
+
+At the Ubuntu shell prompt, clone and run the base installer:
 
 ```bash
 sudo apt-get update
@@ -43,43 +50,82 @@ New-Item -ItemType Directory -Force F:\WSL
 wsl --export Ubuntu-24.04 "F:\WSL\ubuntu-24.04-base.tar"
 ```
 
-## Project Instance
+### Reset to a clean Ubuntu base
 
-Import the base tarball under a project name:
+To discard all customizations and rebuild the base from the original Ubuntu
+image, first exit Ubuntu. Then run the following in PowerShell. **This permanently
+deletes everything in the `Ubuntu-24.04` distro and the previously exported base
+tarball.** Project instances imported under other names are not affected.
 
 ```powershell
-New-Item -ItemType Directory -Force F:\WSL\myproject
+wsl --terminate Ubuntu-24.04
+wsl --unregister Ubuntu-24.04
+Remove-Item "F:\WSL\ubuntu-24.04-base.tar" -ErrorAction SilentlyContinue
+wsl --install --distribution Ubuntu-24.04
+```
 
-wsl --import myproject `
-  F:\WSL\myproject `
+Open the newly installed distro, create its Linux user when prompted, and repeat
+the base installation and export steps above. If your base tarball is stored at a
+different path, replace `F:\WSL\ubuntu-24.04-base.tar` accordingly.
+
+## Project Instance
+
+In PowerShell, set the project name once. Keep using the same PowerShell window
+for the remaining commands in this section:
+
+```powershell
+$Project = "myproject"
+$ProjectDir = "F:\WSL\$Project"
+```
+
+Create its directory and import the base tarball:
+
+```powershell
+New-Item -ItemType Directory -Force $ProjectDir
+
+wsl --import $Project `
+  $ProjectDir `
   "F:\WSL\ubuntu-24.04-base.tar" `
   --version 2
 ```
 
-Open it:
+The first time you start the project instance, run its update immediately. This
+pulls the latest repository changes and runs the complete bootstrap:
 
 ```powershell
-wsl --distribution myproject
+wsl --distribution $Project --exec bash -lc '~/update.sh'
 ```
+
+After the update completes, open an interactive shell:
+
+```powershell
+wsl --distribution $Project
+```
+
+Each interactive shell prints the commands for updating and verifying the
+instance. `--exec` runs a command directly in the selected distro; `bash -lc`
+supplies a login shell so that `~` resolves to the configured default user's home
+directory.
 
 ## Bootstrap
 
 Inside the project instance:
 
 ```bash
-cd wsl-dev-bootstrap
-git pull --ff-only
-./bootstrap.sh
+~/update.sh
 ```
 
-Rerun `./bootstrap.sh` any time you want to update apt packages and mise-managed tools in that instance.
+The base installer creates `~/update.sh` in every subsequently imported custom
+instance. The update script changes to the repository checkout, fast-forward
+pulls the latest version, and runs `./bootstrap.sh`. Run it any time you want to
+update apt packages and mise-managed tools in that instance.
 
 ## GitHub Auth
 
 Authenticate this WSL instance independently:
 
 ```bash
-./scripts/authenticate-github.sh
+~/wsl-dev-bootstrap/scripts/authenticate-github.sh
 ```
 
 The script prints a prefilled fine-grained PAT creation URL, then prompts for the token.
@@ -102,7 +148,7 @@ The URL pre-fills the token name, description, expiry, and permission flags. Pic
 ## Verify
 
 ```bash
-./verify.sh
+~/wsl-dev-bootstrap/verify.sh
 ```
 
 Manual checks:
@@ -156,13 +202,13 @@ npx playwright install --with-deps
 Stop one instance:
 
 ```powershell
-wsl --terminate myproject
+wsl --terminate $Project
 ```
 
 Remove it:
 
 ```powershell
-wsl --unregister myproject
+wsl --unregister $Project
 ```
 
 `wsl --shutdown` stops all WSL instances.

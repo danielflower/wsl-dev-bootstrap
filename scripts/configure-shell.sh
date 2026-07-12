@@ -21,6 +21,11 @@ if [[ -d "${HOME}/.local/bin" ]]; then
     *) export PATH="${HOME}/.local/bin:${PATH}" ;;
   esac
 fi
+
+if [[ $- == *i* ]]; then
+  printf '\n[wsl-dev-bootstrap] Update this instance: ~/update.sh\n'
+  printf '[wsl-dev-bootstrap] Verify this instance: ~/wsl-dev-bootstrap/verify.sh\n\n'
+fi
 BASHRC_BLOCK
 )
 
