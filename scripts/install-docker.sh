@@ -17,7 +17,8 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates curl
 sudo install -m 0755 -d /etc/apt/keyrings /etc/apt/sources.list.d
 
 tmp_key=$(mktemp)
-trap 'rm -f "$tmp_key"' EXIT
+tmp_source=$(mktemp)
+trap 'rm -f "$tmp_key" "$tmp_source"' EXIT
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o "$tmp_key"
 sudo gpg --dearmor --yes -o /etc/apt/keyrings/docker.gpg "$tmp_key"
 sudo chmod a+r /etc/apt/keyrings/docker.gpg
@@ -26,8 +27,6 @@ arch=$(dpkg --print-architecture)
 # shellcheck disable=SC1091
 codename=$(. /etc/os-release && echo "$VERSION_CODENAME")
 source_line="deb [arch=${arch} signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu ${codename} stable"
-tmp_source=$(mktemp)
-trap 'rm -f "$tmp_key" "$tmp_source"' EXIT
 printf '%s\n' "$source_line" >"$tmp_source"
 sudo install -m 0644 "$tmp_source" /etc/apt/sources.list.d/docker.list
 
@@ -40,6 +39,7 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
     docker-compose-plugin
 
 sudo usermod -aG docker "$USER"
+echo "NOTE: You may need to log out and back in for Docker group membership to take effect."
 
 sudo systemctl enable docker
 sudo systemctl start docker
