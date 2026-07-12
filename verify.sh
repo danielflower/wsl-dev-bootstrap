@@ -31,6 +31,13 @@ fi
 
 require_cmd git
 require_cmd gh
+require_cmd docker
+
+if docker run --rm hello-world >/dev/null 2>&1; then
+  pass "docker run hello-world succeeded"
+else
+  fail "docker run hello-world failed"
+fi
 
 if MISE=$(mise_bin); then
   pass "mise is available at ${MISE}"
