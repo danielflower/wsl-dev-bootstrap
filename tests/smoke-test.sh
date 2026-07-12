@@ -10,6 +10,7 @@ scripts=(
   scripts/configure-wsl.sh
   scripts/install-apt-packages.sh
   scripts/install-github-cli.sh
+  scripts/install-docker.sh
   scripts/install-mise.sh
   scripts/install-tools.sh
   scripts/configure-shell.sh

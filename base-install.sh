@@ -19,6 +19,9 @@ main() {
   log "Installing GitHub CLI"
   "${ROOT_DIR}/scripts/install-github-cli.sh"
 
+  log "Installing Docker"
+  "${ROOT_DIR}/scripts/install-docker.sh"
+
   log "Installing mise"
   "${ROOT_DIR}/scripts/install-mise.sh"
 
