@@ -1,27 +1,18 @@
 # wsl-dev-bootstrap
 
-Repeatable bootstrap for Ubuntu WSL2 development instances.
+Repeatable bootstrap for Ubuntu WSL2 development instances. The idea is that each "project" (one ore more related git repos in practice) have their own indepdent ubuntu images, managed through WSL2. There is no file mounting, and the coding agents can run in YOLO mode. Note that this is not fully hardened: root access is still achievable, and there is no outgoing network access restrictions or visibility. But it is safer than just running everything on a shared system, with file mounts to your host PC just sitting there. Also, GitHub auth is using fine grained tokens so you can restrict access to specific orgs or repos per project.
 
-The bootstrap installs Git, GitHub CLI (`gh`), mise, Eclipse Temurin Java 11/17/21/25, Node.js 24, pnpm 10, Codex CLI, Maven, and common command-line development tools. Java 25, Node.js 24, pnpm 10, and Maven are configured as global mise tools. Codex CLI is installed through npm.
-
-## Prerequisites
-
-- Windows 10 or Windows 11 with WSL2
-- Ubuntu 24.04 preferred, Ubuntu 22.04 where practical
-- Internet access
-- A user with sudo access
-- Optional GitHub account
+The bootstrap installs Git, GitHub CLI (`gh`), mise, Eclipse Temurin Java 11/17/21/25, Node.js 24, pnpm 10, Codex CLI, Maven, and common command-line development tools. Java 25, Node.js 24, pnpm 10, and Maven are configured as global mise tools. Codex CLI is installed through npm. 
 
 ## Base Image
 
-Install Ubuntu 24.04:
+Install Ubuntu 24.04 if you don't have it installed:
 
 ```powershell
 wsl --install --distribution Ubuntu-24.04
 ```
 
-Open the distro either by selecting **Ubuntu 24.04 LTS** from the Windows Start
-menu or by running this in PowerShell:
+If already installed, just open it:
 
 ```powershell
 wsl --distribution Ubuntu-24.04
@@ -49,24 +40,6 @@ New-Item -ItemType Directory -Force F:\WSL
 
 wsl --export Ubuntu-24.04 "F:\WSL\ubuntu-24.04-base.tar"
 ```
-
-### Reset to a clean Ubuntu base
-
-To discard all customizations and rebuild the base from the original Ubuntu
-image, first exit Ubuntu. Then run the following in PowerShell. **This permanently
-deletes everything in the `Ubuntu-24.04` distro and the previously exported base
-tarball.** Project instances imported under other names are not affected.
-
-```powershell
-wsl --terminate Ubuntu-24.04
-wsl --unregister Ubuntu-24.04
-Remove-Item "F:\WSL\ubuntu-24.04-base.tar" -ErrorAction SilentlyContinue
-wsl --install --distribution Ubuntu-24.04
-```
-
-Open the newly installed distro, create its Linux user when prompted, and repeat
-the base installation and export steps above. If your base tarball is stored at a
-different path, replace `F:\WSL\ubuntu-24.04-base.tar` accordingly.
 
 ## Project Instance
 
@@ -120,6 +93,21 @@ instance. The update script changes to the repository checkout, fast-forward
 pulls the latest version, and runs `./bootstrap.sh`. Run it any time you want to
 update apt packages and mise-managed tools in that instance.
 
+### Reset to a clean Ubuntu base
+
+To discard all customizations and rebuild the base from the original Ubuntu
+image, first exit Ubuntu. Then run the following in PowerShell. **This permanently
+deletes everything in the `Ubuntu-24.04` distro and the previously exported base
+tarball.** Project instances imported under other names are not affected.
+
+```powershell
+wsl --terminate Ubuntu-24.04
+wsl --unregister Ubuntu-24.04
+Remove-Item "F:\WSL\ubuntu-24.04-base.tar" -ErrorAction SilentlyContinue
+```
+
+Then start again.
+
 ## GitHub Auth
 
 Authenticate this WSL instance independently:
@@ -151,19 +139,6 @@ The URL pre-fills the token name, description, expiry, and permission flags. Pic
 ~/wsl-dev-bootstrap/verify.sh
 ```
 
-Manual checks:
-
-```bash
-java -version
-node --version
-pnpm --version
-npm --version
-npx --version
-mvn --version
-codex --version
-gh auth status
-mise ls
-```
 
 ## Java
 
@@ -211,17 +186,6 @@ Remove it:
 wsl --unregister $Project
 ```
 
-`wsl --shutdown` stops all WSL instances.
-
-## Customize
-
-- Apt packages: `scripts/install-apt-packages.sh`
-- WSL config: `scripts/configure-wsl.sh`
-- Codex defaults: `scripts/configure-codex.sh`
-- Git defaults: `config/gitconfig` and `config/gitignore_global`
-- Global tools: `scripts/install-tools.sh`
-- Shell activation: `scripts/configure-shell.sh`
-- Java switching: `scripts/use-java`
 
 ## License
 
