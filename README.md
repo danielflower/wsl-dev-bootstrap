@@ -56,10 +56,7 @@ $Project = "myproject"
 $ProjectDir = Join-Path $WSLDir $Project
 New-Item -ItemType Directory -Force $ProjectDir
 
-wsl --import $Project `
-  $ProjectDir `
-  $BaseImage `
-  --version 2
+wsl --import $Project $ProjectDir $BaseImage --version 2
 ```
 
 The first time you start the project instance, run its update immediately. This
