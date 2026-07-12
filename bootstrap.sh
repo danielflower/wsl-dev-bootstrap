@@ -25,6 +25,9 @@ main() {
   log "Configuring Git safe defaults"
   "${ROOT_DIR}/scripts/configure-git.sh"
 
+  log "Configuring the instance update command"
+  "${ROOT_DIR}/scripts/configure-update-command.sh"
+
   log "Installing mise-managed tools"
   "${ROOT_DIR}/scripts/install-tools.sh"
 
