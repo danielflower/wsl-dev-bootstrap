@@ -75,10 +75,9 @@ After the update completes, open an interactive shell:
 wsl --distribution $Project
 ```
 
-Each interactive shell prints the commands for updating and verifying the
-instance. `--exec` runs a command directly in the selected distro; `bash -lc`
-supplies a login shell so that `~` resolves to the configured default user's home
-directory.
+Each interactive shell prints common setup and maintenance commands. `--exec`
+runs a command directly in the selected distro; `bash -lc` supplies a login shell
+so that `~` resolves to the configured default user's home directory.
 
 ## Bootstrap
 
@@ -108,70 +107,6 @@ Remove-Item "F:\WSL\ubuntu-24.04-base.tar" -ErrorAction SilentlyContinue
 
 Then start again.
 
-## GitHub Auth
-
-Authenticate this WSL instance independently:
-
-```bash
-~/wsl-dev-bootstrap/scripts/authenticate-github.sh
-```
-
-The script prints a prefilled fine-grained PAT creation URL, then prompts for the token.
-
-Inspect or remove auth:
-
-```bash
-gh auth status
-gh auth logout --hostname github.com
-```
-
-The URL pre-fills the token name, description, expiry, and permission flags. Pick only the repositories you want this WSL instance to access.
-
-- `Contents`: write
-- `Pull requests`: write
-- `Issues`: read
-- `Actions`: read
-- `Statuses`: read
-
-## Verify
-
-```bash
-~/wsl-dev-bootstrap/verify.sh
-```
-
-
-## Java
-
-Current shell:
-
-```bash
-mise shell java@temurin-17
-```
-
-Helper:
-
-```bash
-./scripts/use-java 17
-source ./scripts/use-java 17
-```
-
-Project-local:
-
-```bash
-mise use java@temurin-21
-```
-
-Global default:
-
-```bash
-mise use --global java@temurin-25
-```
-
-Playwright, when needed in a project:
-
-```bash
-npx playwright install --with-deps
-```
 ## Remove
 
 Stop one instance:

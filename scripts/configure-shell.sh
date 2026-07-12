@@ -24,7 +24,10 @@ fi
 
 if [[ $- == *i* ]]; then
   printf '\n[wsl-dev-bootstrap] Update this instance: ~/update.sh\n'
+  printf '[wsl-dev-bootstrap] Authenticate GitHub: ~/wsl-dev-bootstrap/scripts/authenticate-github.sh\n'
   printf '[wsl-dev-bootstrap] Verify this instance: ~/wsl-dev-bootstrap/verify.sh\n\n'
+  printf '[wsl-dev-bootstrap] Switch Java: mise shell java@temurin-17 (11, 17, 21, or 25)\n'
+  printf '[wsl-dev-bootstrap] Install Playwright: npx playwright install --with-deps\n\n'
 fi
 BASHRC_BLOCK
 )
